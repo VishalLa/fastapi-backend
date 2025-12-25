@@ -1,0 +1,8 @@
+/myenv
+myenv/
+/__pycache__
+__pycache__/
+*.env
+/db
+db/
+test.py
