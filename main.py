@@ -22,6 +22,7 @@ from sqlalchemy.orm import Session
 from app.api.doctor_route import admin_doctor_api_route
 from app.api.department_route import admin_department_api_route
 from app.api.patient_route import patient_api_route
+from app.api.admin_route import admin_dashboard_api
 
 
 @asynccontextmanager
@@ -69,6 +70,7 @@ app = FastAPI(
 app.include_router(admin_doctor_api_route)
 app.include_router(admin_department_api_route)
 app.include_router(patient_api_route)
+app.include_router(admin_dashboard_api)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)

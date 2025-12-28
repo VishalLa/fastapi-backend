@@ -155,7 +155,7 @@ class DoctorService:
             "doctor_id": doctor_id,
             "doctor_name": doctor.doctor_name,
             "department_name": doctor.department.department_name,
-            "phone_no": str(doctor.phone_no)
+            "phone_no": str(doctor.phone_no),
         }
         
         return response

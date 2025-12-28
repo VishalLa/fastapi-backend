@@ -178,6 +178,6 @@ class DoctorAvailability(Base):
     __tablename__ = "doctor_availability"
     id = Column(Integer, primary_key=True, autoincrement=True)
     doctor_id = Column(String(16), ForeignKey("doctor.doctor_id"), nullable=False)
-
+    date = Column(Date, nullable=False)
     morning_available = Column(Boolean, default=False)
     evening_available = Column(Boolean, default=True)
