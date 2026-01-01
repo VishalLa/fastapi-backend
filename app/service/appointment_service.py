@@ -80,9 +80,29 @@ class AppointmentService:
         appointment = result.scalars().first()
 
         return appointment
+    
+
+    async def get_all_appointment(self) -> list[dict]:
+        query = select(Appointment)
+
+        result = await self.db.execute(query)
+        appointments = result.scalars().all()
+
+        summary_list = [
+            {
+                "appointment_id": appointment.appointment_id,
+                "patient_id": appointment.patient_id,
+                "doctor_id": appointment.doctor_id,
+                "status": appointment.status,
+                "date": appointment.date,
+                "shift": appointment.shift
+            } for appointment in appointments
+        ]
+
+        return summary_list
 
     
-    async def get_appointment_by_appointment_id(self, appointment_id: str)-> AppointmentResponse:
+    async def get_appointment_by_appointment_id_(self, appointment_id: str)-> AppointmentResponse:
         appointment = await self.query_appointment_by_appointment_id_(appointment_id=appointment_id)
         
         if not appointment:
@@ -94,7 +114,7 @@ class AppointmentService:
         return appointment
 
     
-    async def get_appointment_with_doctor_and_patient(self, doctor_id: str, patient_id: str)-> AppointmentResponse:
+    async def get_appointment_with_patient_and_doctor_(self, doctor_id: str, patient_id: str)-> AppointmentResponse:
         appointment = await self.query_appointment_by_patient_and_doctor_id_(doctor_id=doctor_id, patient_id=patient_id)
 
         if not appointment:
@@ -106,7 +126,7 @@ class AppointmentService:
         return appointment
     
     
-    async def delete_appointment_by_appointment_id(self, appointment_id: str):
+    async def delete_appointment_by_appointment_id_(self, appointment_id: str):
         appointment = await self.query_appointment_by_appointment_id_(appointment_id=appointment_id)
         
         if not appointment:
@@ -128,7 +148,7 @@ class AppointmentService:
         return {"message": f"appointment with appointment id: {appointment_id} deleter"}
     
 
-    async def delete_appointment_by_patient_and_doctor_id(self, doctor_id: str, patient_id: str):
+    async def delete_appointment_by_patient_and_doctor_id_(self, doctor_id: str, patient_id: str):
         appointment = await self.query_appointment_by_patient_and_doctor_id_(doctor_id=doctor_id, patient_id=patient_id)
 
         if not appointment: 
@@ -150,7 +170,7 @@ class AppointmentService:
         return {"message": f"appointment with doctor id: {doctor_id} and patient id: {patient_id} deleter"}
     
 
-    async def create_appointment(self, payload: AppointmentBase):
+    async def create_appointment_(self, payload: AppointmentBase):
         valid_date = validate_date_format(payload.date)
 
         query = (
@@ -208,7 +228,7 @@ class AppointmentService:
 
         if not is_available:
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
+                status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"doctor is not available at asked shift !"
             )
 
@@ -275,21 +295,24 @@ class AppointmentService:
                 detail=f"No appointment found!"
             )
 
-        if appointment_status == "Complete":
-            appointment.status = appointment_status 
-            return {"message": "appointment marked as complete"}
-
-        elif appointment_status == "Cancle":
-            appointment.status = appointment_status 
-            return {"message": "appointment marked as cancle"}
-
-        elif appointment_status == "Missed":
-            appointment.status = appointment_status 
-            return {"message": "appointment maked as missed"}
-
-        else: 
+        if appointment_status not in {"complete", "cancel", "missed"}:
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
+                status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid appointment status"
-            ) 
+            )
+        
+        appointment.status = appointment_status
+
+        try:
+            await self.db.commit()
+        except Exception as e:
+            await self.db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=str(e)
+            )
+
+        return {
+            "message": f"Appointment marked as {appointment_status}"
+        }
 

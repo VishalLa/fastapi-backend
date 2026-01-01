@@ -47,3 +47,4 @@ class AppointmentResponse(TunedModel):
     visit_type: str
     date: Date
     status: str
+    shift: str

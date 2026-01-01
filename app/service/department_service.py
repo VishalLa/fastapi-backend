@@ -59,16 +59,16 @@ class DepartmentService:
         result = await self.db.execute(query)
         departments = result.scalars().all()
 
-        summary_list = []
-        for dep in departments:
-            summary_list.append({
+        summary_list = [
+            {
                 "department_id": dep.department_id,
                 "department_name": dep.department_name,
                 "location": dep.location,
                 "description": dep.description,
                 "head_of_department": dep.head_of_department
-            })
-
+            } for dep in departments
+        ]
+        
         return summary_list
 
 

@@ -23,6 +23,8 @@ from app.api.doctor_route import admin_doctor_api_route
 from app.api.department_route import admin_department_api_route
 from app.api.patient_route import patient_api_route
 from app.api.admin_route import admin_dashboard_api
+from app.api.appointment_route import appointment_api_route
+from app.api.availability_route import availability_api
 
 
 @asynccontextmanager
@@ -71,6 +73,8 @@ app.include_router(admin_doctor_api_route)
 app.include_router(admin_department_api_route)
 app.include_router(patient_api_route)
 app.include_router(admin_dashboard_api)
+app.include_router(appointment_api_route)
+app.include_router(availability_api)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)

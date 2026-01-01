@@ -1,12 +1,19 @@
+from datetime import date as Date
 from .api_base_model import TunedModel
 
 class DoctorAvailabilityBase(TunedModel):
     doctor_id: str
+    date: Date
     morning_available: bool
     evening_available: bool
 
-class DoctorAvailabilityCreate(DoctorAvailabilityBase):
-    pass
+class DoctorAvailabilityUpdate(TunedModel):
+    morning_available: bool
+    evening_available: bool
 
-class DoctorAvailabilityResponse(DoctorAvailabilityBase):
-    id: int
+class DoctorAvailabilityResponse(TunedModel):
+    date: Date
+    morning_available: bool
+    evening_available: bool
+
+

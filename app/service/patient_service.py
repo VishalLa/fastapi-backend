@@ -14,8 +14,7 @@ from ..database.model import (
 
 from ..database.api_models.patient_model import (
     PateintUpdate,
-    PateintCreate,
-    PatientSummary
+    PateintCreate
 )
 
 from .helper import (
@@ -86,15 +85,14 @@ class PatientService:
         result = await self.db.execute(query)
         patients = result.scalars().all()
 
-        summary_list = []
-        for patient in patients:
-            summary_list.append({
-                "patient_id": patient.patient_id,
-                "patient_name": patient.patient_name,
-                "email": patient.email,
-                "phone_no": patient.phone_no,
-                "emergency_contact": patient.emergency_contact
-            })
+        summary_list = [
+            {"patient_id": patient.patient_id,
+            "patient_name": patient.patient_name,
+            "email": patient.email,
+            "phone_no": patient.phone_no,
+            "emergency_contact": patient.emergency_contact}
+            for patient in patients
+        ]
 
         return summary_list
     
