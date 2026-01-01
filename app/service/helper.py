@@ -64,3 +64,8 @@ def generate_new_patient_id() -> str:
     uid: str = str(uuid.uuid4()).split('-')
     patient_id: str = 'P' + str(uid[0] + uid[1])
     return patient_id
+
+
+def generate_new_doctor_availability(doctor_id: str, iter: int):
+    uid: str = str(uuid.uuid4())
+    return f"{doctor_id}_{uid}_{iter}"

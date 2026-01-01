@@ -170,14 +170,14 @@ class DoctorService:
         result = await self.db.execute(query)
         doctors = result.scalars().all()
 
-        summary_list = []
-        for doc in doctors:
-            summary_list.append({
+        summary_list = [
+            {
                 "doctor_id": doc.doctor_id,
                 "doctor_name": doc.doctor_name,
                 "phone_no": str(doc.phone_no),
                 "department_name": doc.department.department_name if doc.department else "Null"
-            })
+            } for doc in doctors
+        ]
 
         return summary_list
 
