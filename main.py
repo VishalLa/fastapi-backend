@@ -18,6 +18,7 @@ from app.core.config import settings
 
 from sqlalchemy.orm import Session
 
+from app.service.scheduler.scheduler_manager import start_scheduler,  scheduler
 
 from app.api.doctor_route import admin_doctor_api_route
 from app.api.department_route import admin_department_api_route
@@ -56,11 +57,18 @@ async def lifespan(app: FastAPI):
     finally:
         db.close()
 
+    start_scheduler()
+    
+    print("[STARTUP] Scheduler started")
+
     print("[STARTUP] Startup complete.")
     print("--------------------------------------")
-    yield  
     
+    yield  
+
     print("[SHUTDOWN] Server shutting down...")
+    scheduler.shutdown()
+    print("[SHUTDOWN] Scheduler stopped")
 
 
 app = FastAPI(
