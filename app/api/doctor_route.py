@@ -8,6 +8,7 @@ from ..database.api_models.doctor_model import (
     DoctorSummary,
     DoctorUpdate,
 )
+from ..service.doctor_availabiliry_service import DoctorAvailabilityService
 from ..service.doctor_service import DoctorService
 
 admin_doctor_api_route = APIRouter(prefix="/admin/doctor", tags=["Doctor"])
@@ -42,9 +43,14 @@ async def get_doctor(
 )
 async def create_new_doctor(
     payload: DoctorCreate,
-    service: DoctorService = Depends(DoctorService)
+    doctor_service: DoctorService = Depends(DoctorService),
+    availability_service: DoctorAvailabilityService = Depends(DoctorAvailabilityService)
 ):
-    return await service.create_new_doctor_(payload=payload)
+    doctor_response =  await doctor_service.create_new_doctor_(payload=payload)
+    doctor_id = doctor_response["doctor_id"]
+    _ = await availability_service.create_availability_for_week(doctor_id=doctor_id)
+    return doctor_response
+
 
 
 @admin_doctor_api_route.put(

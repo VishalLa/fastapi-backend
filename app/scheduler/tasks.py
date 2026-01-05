@@ -5,7 +5,7 @@ from datetime import date as Date
 from sqlalchemy.future import select
 from sqlalchemy import  and_
 
-from ...database.model import (
+from ..database.model import (
     Appointment,
     DoctorAvailability,
     Doctor

@@ -1,0 +1,413 @@
+2026-01-05 12:22:39,238 DEBUG asyncio MainThread : Using proactor: IocpProactor
+2026-01-05 12:22:39,317 INFO sqlalchemy.engine.Engine MainThread : BEGIN (implicit)
+2026-01-05 12:22:39,317 INFO sqlalchemy.engine.Engine MainThread : PRAGMA main.table_info("admin")
+2026-01-05 12:22:39,317 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,317 INFO sqlalchemy.engine.Engine MainThread : PRAGMA temp.table_info("admin")
+2026-01-05 12:22:39,317 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,317 INFO sqlalchemy.engine.Engine MainThread : PRAGMA main.table_info("doctor")
+2026-01-05 12:22:39,317 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,317 INFO sqlalchemy.engine.Engine MainThread : PRAGMA temp.table_info("doctor")
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : PRAGMA main.table_info("patient")
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : PRAGMA temp.table_info("patient")
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : PRAGMA main.table_info("department")
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : PRAGMA temp.table_info("department")
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : PRAGMA main.table_info("appointment")
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : PRAGMA temp.table_info("appointment")
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : PRAGMA main.table_info("treatment")
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : PRAGMA temp.table_info("treatment")
+2026-01-05 12:22:39,332 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,343 INFO sqlalchemy.engine.Engine MainThread : PRAGMA main.table_info("doctor_availability")
+2026-01-05 12:22:39,343 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,343 INFO sqlalchemy.engine.Engine MainThread : PRAGMA temp.table_info("doctor_availability")
+2026-01-05 12:22:39,343 INFO sqlalchemy.engine.Engine MainThread : [raw sql] ()
+2026-01-05 12:22:39,343 INFO sqlalchemy.engine.Engine MainThread : 
+CREATE TABLE admin (
+	admin_id VARCHAR(8) NOT NULL, 
+	email VARCHAR(25) NOT NULL, 
+	password_hash VARCHAR(240) NOT NULL, 
+	PRIMARY KEY (admin_id), 
+	UNIQUE (email)
+)
+
+
+2026-01-05 12:22:39,343 INFO sqlalchemy.engine.Engine MainThread : [no key 0.00022s] ()
+2026-01-05 12:22:39,348 INFO sqlalchemy.engine.Engine MainThread : 
+CREATE TABLE doctor (
+	doctor_id VARCHAR(16) NOT NULL, 
+	doctor_name VARCHAR(20) NOT NULL, 
+	email VARCHAR(25) NOT NULL, 
+	password_hash VARCHAR(240) NOT NULL, 
+	gender VARCHAR(6) NOT NULL, 
+	qualification TEXT NOT NULL, 
+	experience INTEGER NOT NULL, 
+	special_experience INTEGER NOT NULL, 
+	speciality TEXT NOT NULL, 
+	phone_no INTEGER NOT NULL, 
+	department_id VARCHAR(20) NOT NULL, 
+	status BOOLEAN NOT NULL, 
+	PRIMARY KEY (doctor_id), 
+	UNIQUE (email), 
+	FOREIGN KEY(department_id) REFERENCES department (department_id) ON DELETE CASCADE
+)
+
+
+2026-01-05 12:22:39,360 INFO sqlalchemy.engine.Engine MainThread : [no key 0.00061s] ()
+2026-01-05 12:22:39,364 INFO sqlalchemy.engine.Engine MainThread : 
+CREATE TABLE patient (
+	patient_id VARCHAR(16) NOT NULL, 
+	patient_name VARCHAR(100) NOT NULL, 
+	email VARCHAR(25) NOT NULL, 
+	password_hash VARCHAR(240) NOT NULL, 
+	gender VARCHAR(6) NOT NULL, 
+	phone_no VARCHAR(15) NOT NULL, 
+	emergency_contact VARCHAR(15), 
+	date_of_birth DATE NOT NULL, 
+	address TEXT NOT NULL, 
+	status BOOLEAN NOT NULL, 
+	medical_history TEXT, 
+	PRIMARY KEY (patient_id), 
+	UNIQUE (email)
+)
+
+
+2026-01-05 12:22:39,364 INFO sqlalchemy.engine.Engine MainThread : [no key 0.00036s] ()
+2026-01-05 12:22:39,369 INFO sqlalchemy.engine.Engine MainThread : 
+CREATE TABLE department (
+	department_id VARCHAR(20) NOT NULL, 
+	department_name VARCHAR(100) NOT NULL, 
+	head_of_department VARCHAR(8), 
+	location VARCHAR(30) NOT NULL, 
+	description TEXT, 
+	PRIMARY KEY (department_id), 
+	FOREIGN KEY(head_of_department) REFERENCES doctor (doctor_id)
+)
+
+
+2026-01-05 12:22:39,369 INFO sqlalchemy.engine.Engine MainThread : [no key 0.00048s] ()
+2026-01-05 12:22:39,372 INFO sqlalchemy.engine.Engine MainThread : 
+CREATE TABLE appointment (
+	appointment_id VARCHAR(32) NOT NULL, 
+	patient_id VARCHAR(16) NOT NULL, 
+	doctor_id VARCHAR(16) NOT NULL, 
+	visit_type VARCHAR(15) NOT NULL, 
+	date DATE NOT NULL, 
+	shift VARCHAR(10) NOT NULL, 
+	status VARCHAR(12) NOT NULL, 
+	reason TEXT, 
+	PRIMARY KEY (appointment_id), 
+	FOREIGN KEY(patient_id) REFERENCES patient (patient_id) ON DELETE CASCADE, 
+	FOREIGN KEY(doctor_id) REFERENCES doctor (doctor_id) ON DELETE CASCADE
+)
+
+
+2026-01-05 12:22:39,372 INFO sqlalchemy.engine.Engine MainThread : [no key 0.00031s] ()
+2026-01-05 12:22:39,372 INFO sqlalchemy.engine.Engine MainThread : 
+CREATE TABLE doctor_availability (
+	availability_id INTEGER NOT NULL, 
+	doctor_id VARCHAR(16) NOT NULL, 
+	date DATE NOT NULL, 
+	morning_available BOOLEAN, 
+	evening_available BOOLEAN, 
+	PRIMARY KEY (availability_id), 
+	FOREIGN KEY(doctor_id) REFERENCES doctor (doctor_id)
+)
+
+
+2026-01-05 12:22:39,380 INFO sqlalchemy.engine.Engine MainThread : [no key 0.00030s] ()
+2026-01-05 12:22:39,380 INFO sqlalchemy.engine.Engine MainThread : 
+CREATE TABLE treatment (
+	treatment_id VARCHAR(8) NOT NULL, 
+	appointment_id VARCHAR(32) NOT NULL, 
+	test_done TEXT, 
+	diagonsis TEXT, 
+	prescription TEXT, 
+	follow_up_date TEXT, 
+	PRIMARY KEY (treatment_id), 
+	FOREIGN KEY(appointment_id) REFERENCES appointment (appointment_id) ON DELETE CASCADE
+)
+
+
+2026-01-05 12:22:39,380 INFO sqlalchemy.engine.Engine MainThread : [no key 0.00037s] ()
+2026-01-05 12:22:39,380 INFO sqlalchemy.engine.Engine MainThread : COMMIT
+2026-01-05 12:22:39,408 INFO sqlalchemy.engine.Engine MainThread : BEGIN (implicit)
+2026-01-05 12:22:39,411 INFO sqlalchemy.engine.Engine MainThread : SELECT admin.admin_id AS admin_admin_id, admin.email AS admin_email, admin.password_hash AS admin_password_hash 
+FROM admin 
+WHERE admin.admin_id = ?
+ LIMIT ? OFFSET ?
+2026-01-05 12:22:39,411 INFO sqlalchemy.engine.Engine MainThread : [generated in 0.00043s] ('A1', 1, 0)
+2026-01-05 12:22:39,417 DEBUG passlib.handlers.bcrypt MainThread : detected 'bcrypt' backend, version '3.2.2'
+2026-01-05 12:22:39,417 DEBUG passlib.handlers.bcrypt MainThread : 'bcrypt' backend lacks $2$ support, enabling workaround
+2026-01-05 12:22:39,844 INFO sqlalchemy.engine.Engine MainThread : INSERT INTO admin (admin_id, email, password_hash) VALUES (?, ?, ?)
+2026-01-05 12:22:39,844 INFO sqlalchemy.engine.Engine MainThread : [generated in 0.00052s] ('A1', 'superadmin@hospital.com', '$2b$12$jZn8GYuZci9cPx8voL5fu.tJK.0kLDurXjK6zi60JnpRFRzV/QFJu')
+2026-01-05 12:22:39,877 INFO sqlalchemy.engine.Engine MainThread : COMMIT
+2026-01-05 12:22:39,877 INFO apscheduler.scheduler MainThread : Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-05 12:22:39,877 INFO apscheduler.scheduler MainThread : Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-05 12:22:39,877 INFO apscheduler.scheduler MainThread : Added job "Task.update_appointment_status" to job store "default"
+2026-01-05 12:22:39,877 INFO apscheduler.scheduler MainThread : Added job "Task.update_availability_dates" to job store "default"
+2026-01-05 12:22:39,877 INFO apscheduler.scheduler MainThread : Scheduler started
+2026-01-05 12:22:39,877 DEBUG apscheduler.scheduler MainThread : Looking for jobs to run
+2026-01-05 12:22:39,877 DEBUG apscheduler.scheduler MainThread : Next wakeup is due at 2026-01-06 00:05:00+05:30 (in 42140.122571 seconds)
+2026-01-05 12:23:00,978 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing <function connect.<locals>.connector at 0x0000020BA3CF0F40>
+2026-01-05 12:23:00,982 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation <function connect.<locals>.connector at 0x0000020BA3CF0F40> completed
+2026-01-05 12:23:00,983 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method create_function of sqlite3.Connection object at 0x0000020BA3CF9120>, 'regexp', 2, <function SQLiteDialect_pysqlite.on_connect.<locals>.regexp at 0x0000020BA37C9BC0>, deterministic=True)
+2026-01-05 12:23:00,983 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method create_function of sqlite3.Connection object at 0x0000020BA3CF9120>, 'regexp', 2, <function SQLiteDialect_pysqlite.on_connect.<locals>.regexp at 0x0000020BA37C9BC0>, deterministic=True) completed
+2026-01-05 12:23:00,983 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method create_function of sqlite3.Connection object at 0x0000020BA3CF9120>, 'floor', 1, <built-in function floor>, deterministic=True)
+2026-01-05 12:23:00,983 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method create_function of sqlite3.Connection object at 0x0000020BA3CF9120>, 'floor', 1, <built-in function floor>, deterministic=True) completed
+2026-01-05 12:23:00,983 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:00,983 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:00,983 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CB7A40>, 'PRAGMA read_uncommitted', [])
+2026-01-05 12:23:00,983 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CB7A40>, 'PRAGMA read_uncommitted', []) completed
+2026-01-05 12:23:00,983 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CB7A40>)
+2026-01-05 12:23:00,983 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CB7A40>) completed
+2026-01-05 12:23:00,983 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CB7A40>)
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CB7A40>) completed
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:00,986 INFO sqlalchemy.engine.Engine MainThread : BEGIN (implicit)
+2026-01-05 12:23:00,986 INFO sqlalchemy.engine.Engine MainThread : SELECT doctor.doctor_id, doctor.doctor_name, doctor.email, doctor.password_hash, doctor.gender, doctor.qualification, doctor.experience, doctor.special_experience, doctor.speciality, doctor.phone_no, doctor.department_id, doctor.status 
+FROM doctor
+2026-01-05 12:23:00,986 INFO sqlalchemy.engine.Engine MainThread : [generated in 0.00035s] ()
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFF340>, 'SELECT doctor.doctor_id, doctor.doctor_name, doctor.email, doctor.password_hash, doctor.gender, doctor.qualification, doctor.experience, doctor.special_experience, doctor.speciality, doctor.phone_no, doctor.department_id, doctor.status \nFROM doctor', ())
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFF340>, 'SELECT doctor.doctor_id, doctor.doctor_name, doctor.email, doctor.password_hash, doctor.gender, doctor.qualification, doctor.experience, doctor.special_experience, doctor.speciality, doctor.phone_no, doctor.department_id, doctor.status \nFROM doctor', ()) completed
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFF340>)
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFF340>) completed
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFF340>)
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFF340>) completed
+2026-01-05 12:23:00,986 INFO sqlalchemy.engine.Engine MainThread : ROLLBACK
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:00,986 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:19,932 INFO sqlalchemy.engine.Engine MainThread : BEGIN (implicit)
+2026-01-05 12:23:19,933 INFO sqlalchemy.engine.Engine MainThread : SELECT doctor.doctor_id, doctor.doctor_name, doctor.email, doctor.password_hash, doctor.gender, doctor.qualification, doctor.experience, doctor.special_experience, doctor.speciality, doctor.phone_no, doctor.department_id, doctor.status 
+FROM doctor 
+WHERE doctor.doctor_id = ?
+2026-01-05 12:23:19,934 INFO sqlalchemy.engine.Engine MainThread : [generated in 0.00129s] ('DR10a6dd4d844d',)
+2026-01-05 12:23:19,954 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:19,954 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:19,954 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3C6E640>, 'SELECT doctor.doctor_id, doctor.doctor_name, doctor.email, doctor.password_hash, doctor.gender, doctor.qualification, doctor.experience, doctor.special_experience, doctor.speciality, doctor.phone_no, doctor.department_id, doctor.status \nFROM doctor \nWHERE doctor.doctor_id = ?', ('DR10a6dd4d844d',))
+2026-01-05 12:23:19,954 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3C6E640>, 'SELECT doctor.doctor_id, doctor.doctor_name, doctor.email, doctor.password_hash, doctor.gender, doctor.qualification, doctor.experience, doctor.special_experience, doctor.speciality, doctor.phone_no, doctor.department_id, doctor.status \nFROM doctor \nWHERE doctor.doctor_id = ?', ('DR10a6dd4d844d',)) completed
+2026-01-05 12:23:19,954 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3C6E640>)
+2026-01-05 12:23:19,956 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3C6E640>) completed
+2026-01-05 12:23:19,956 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3C6E640>)
+2026-01-05 12:23:19,956 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3C6E640>) completed
+2026-01-05 12:23:20,333 INFO sqlalchemy.engine.Engine MainThread : INSERT INTO doctor (doctor_id, doctor_name, email, password_hash, gender, qualification, experience, special_experience, speciality, phone_no, department_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-05 12:23:20,333 INFO sqlalchemy.engine.Engine MainThread : [generated in 0.00075s] ('DR10a6dd4d844d', 'abc', 'DR10a6dd4d844d-XYZ@gmail.com', '$2b$12$AYzce7cNPKB4mIkonXT7Relqbto9Vr.JMDeQaIJfOzMUy7Lj9kGbO', 'male', 'abckd', 5, 1, 'kds', '+43315965989059', 'null', 1)
+2026-01-05 12:23:20,333 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:20,333 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:20,333 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3C6E640>, 'INSERT INTO doctor (doctor_id, doctor_name, email, password_hash, gender, qualification, experience, special_experience, speciality, phone_no, department_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', ('DR10a6dd4d844d', 'abc', 'DR10a6dd4d844d-XYZ@gmail.com', '$2b$12$AYzce7cNPKB4mIkonXT7Relqbto9Vr.JMDeQaIJfOzMUy7Lj9kGbO', 'male', 'abckd', 5, 1, 'kds', '+43315965989059', 'null', 1))
+2026-01-05 12:23:20,339 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3C6E640>, 'INSERT INTO doctor (doctor_id, doctor_name, email, password_hash, gender, qualification, experience, special_experience, speciality, phone_no, department_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', ('DR10a6dd4d844d', 'abc', 'DR10a6dd4d844d-XYZ@gmail.com', '$2b$12$AYzce7cNPKB4mIkonXT7Relqbto9Vr.JMDeQaIJfOzMUy7Lj9kGbO', 'male', 'abckd', 5, 1, 'kds', '+43315965989059', 'null', 1)) completed
+2026-01-05 12:23:20,339 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3C6E640>)
+2026-01-05 12:23:20,339 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3C6E640>) completed
+2026-01-05 12:23:20,339 INFO sqlalchemy.engine.Engine MainThread : COMMIT
+2026-01-05 12:23:20,339 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method commit of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:20,339 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method commit of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:20,339 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:20,339 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:20,348 INFO sqlalchemy.engine.Engine MainThread : BEGIN (implicit)
+2026-01-05 12:23:20,350 INFO sqlalchemy.engine.Engine MainThread : SELECT doctor.doctor_id, doctor.doctor_name, doctor.email, doctor.password_hash, doctor.gender, doctor.qualification, doctor.experience, doctor.special_experience, doctor.speciality, doctor.phone_no, doctor.department_id, doctor.status 
+FROM doctor 
+WHERE doctor.doctor_id = ?
+2026-01-05 12:23:20,350 INFO sqlalchemy.engine.Engine MainThread : [generated in 0.00039s] ('DR10a6dd4d844d',)
+2026-01-05 12:23:20,350 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:20,350 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:20,350 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3157540>, 'SELECT doctor.doctor_id, doctor.doctor_name, doctor.email, doctor.password_hash, doctor.gender, doctor.qualification, doctor.experience, doctor.special_experience, doctor.speciality, doctor.phone_no, doctor.department_id, doctor.status \nFROM doctor \nWHERE doctor.doctor_id = ?', ('DR10a6dd4d844d',))
+2026-01-05 12:23:20,350 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3157540>, 'SELECT doctor.doctor_id, doctor.doctor_name, doctor.email, doctor.password_hash, doctor.gender, doctor.qualification, doctor.experience, doctor.special_experience, doctor.speciality, doctor.phone_no, doctor.department_id, doctor.status \nFROM doctor \nWHERE doctor.doctor_id = ?', ('DR10a6dd4d844d',)) completed
+2026-01-05 12:23:20,350 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3157540>)
+2026-01-05 12:23:20,350 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3157540>) completed
+2026-01-05 12:23:20,350 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3157540>)
+2026-01-05 12:23:20,350 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3157540>) completed
+2026-01-05 12:23:20,350 INFO sqlalchemy.engine.Engine MainThread : ROLLBACK
+2026-01-05 12:23:20,350 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:20,350 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:20,350 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:20,350 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,380 INFO sqlalchemy.engine.Engine MainThread : BEGIN (implicit)
+2026-01-05 12:23:30,382 INFO sqlalchemy.engine.Engine MainThread : SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available 
+FROM doctor_availability 
+WHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?
+2026-01-05 12:23:30,382 INFO sqlalchemy.engine.Engine MainThread : [generated in 0.00041s] ('DR10a6dd4d844d', '2026-01-05')
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-05'))
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-05')) completed
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,382 INFO sqlalchemy.engine.Engine MainThread : SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available 
+FROM doctor_availability 
+WHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?
+2026-01-05 12:23:30,382 INFO sqlalchemy.engine.Engine MainThread : [cached since 0.005789s ago] ('DR10a6dd4d844d', '2026-01-06')
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-06'))
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-06')) completed
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,382 INFO sqlalchemy.engine.Engine MainThread : SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available 
+FROM doctor_availability 
+WHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?
+2026-01-05 12:23:30,382 INFO sqlalchemy.engine.Engine MainThread : [cached since 0.008987s ago] ('DR10a6dd4d844d', '2026-01-07')
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-07'))
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-07')) completed
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,382 INFO sqlalchemy.engine.Engine MainThread : SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available 
+FROM doctor_availability 
+WHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?
+2026-01-05 12:23:30,382 INFO sqlalchemy.engine.Engine MainThread : [cached since 0.01176s ago] ('DR10a6dd4d844d', '2026-01-08')
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-08'))
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-08')) completed
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,382 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,396 INFO sqlalchemy.engine.Engine MainThread : SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available 
+FROM doctor_availability 
+WHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?
+2026-01-05 12:23:30,397 INFO sqlalchemy.engine.Engine MainThread : [cached since 0.01476s ago] ('DR10a6dd4d844d', '2026-01-09')
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-09'))
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-09')) completed
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,397 INFO sqlalchemy.engine.Engine MainThread : SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available 
+FROM doctor_availability 
+WHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?
+2026-01-05 12:23:30,397 INFO sqlalchemy.engine.Engine MainThread : [cached since 0.01904s ago] ('DR10a6dd4d844d', '2026-01-10')
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-10'))
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-10')) completed
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,397 INFO sqlalchemy.engine.Engine MainThread : SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available 
+FROM doctor_availability 
+WHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?
+2026-01-05 12:23:30,397 INFO sqlalchemy.engine.Engine MainThread : [cached since 0.02166s ago] ('DR10a6dd4d844d', '2026-01-11')
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-11'))
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ? AND doctor_availability.date = ?', ('DR10a6dd4d844d', '2026-01-11')) completed
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,397 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,407 INFO sqlalchemy.engine.Engine MainThread : INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id
+2026-01-05 12:23:30,407 INFO sqlalchemy.engine.Engine MainThread : [generated in 0.00017s (insertmanyvalues) 1/7 (ordered; batch not supported)] ('DR10a6dd4d844d', '2026-01-05', 0, 0)
+2026-01-05 12:23:30,407 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,407 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,407 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-05', 0, 0))
+2026-01-05 12:23:30,419 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-05', 0, 0)) completed
+2026-01-05 12:23:30,419 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,419 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,419 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,419 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,419 INFO sqlalchemy.engine.Engine MainThread : INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id
+2026-01-05 12:23:30,419 INFO sqlalchemy.engine.Engine MainThread : [insertmanyvalues 2/7 (ordered; batch not supported)] ('DR10a6dd4d844d', '2026-01-06', 0, 0)
+2026-01-05 12:23:30,419 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,419 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,429 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-06', 0, 0))
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-06', 0, 0)) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,430 INFO sqlalchemy.engine.Engine MainThread : INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id
+2026-01-05 12:23:30,430 INFO sqlalchemy.engine.Engine MainThread : [insertmanyvalues 3/7 (ordered; batch not supported)] ('DR10a6dd4d844d', '2026-01-07', 0, 0)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-07', 0, 0))
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-07', 0, 0)) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,430 INFO sqlalchemy.engine.Engine MainThread : INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id
+2026-01-05 12:23:30,430 INFO sqlalchemy.engine.Engine MainThread : [insertmanyvalues 4/7 (ordered; batch not supported)] ('DR10a6dd4d844d', '2026-01-08', 0, 0)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-08', 0, 0))
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-08', 0, 0)) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,430 INFO sqlalchemy.engine.Engine MainThread : INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id
+2026-01-05 12:23:30,430 INFO sqlalchemy.engine.Engine MainThread : [insertmanyvalues 5/7 (ordered; batch not supported)] ('DR10a6dd4d844d', '2026-01-09', 0, 0)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-09', 0, 0))
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-09', 0, 0)) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,430 INFO sqlalchemy.engine.Engine MainThread : INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id
+2026-01-05 12:23:30,430 INFO sqlalchemy.engine.Engine MainThread : [insertmanyvalues 6/7 (ordered; batch not supported)] ('DR10a6dd4d844d', '2026-01-10', 0, 0)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-10', 0, 0))
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-10', 0, 0)) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,430 INFO sqlalchemy.engine.Engine MainThread : INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id
+2026-01-05 12:23:30,430 INFO sqlalchemy.engine.Engine MainThread : [insertmanyvalues 7/7 (ordered; batch not supported)] ('DR10a6dd4d844d', '2026-01-11', 0, 0)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-11', 0, 0))
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFEC0>, 'INSERT INTO doctor_availability (doctor_id, date, morning_available, evening_available) VALUES (?, ?, ?, ?) RETURNING availability_id', ('DR10a6dd4d844d', '2026-01-11', 0, 0)) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>)
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFEC0>) completed
+2026-01-05 12:23:30,430 INFO sqlalchemy.engine.Engine MainThread : COMMIT
+2026-01-05 12:23:30,430 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method commit of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,445 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method commit of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:30,446 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:30,447 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:41,053 INFO sqlalchemy.engine.Engine MainThread : BEGIN (implicit)
+2026-01-05 12:23:41,055 INFO sqlalchemy.engine.Engine MainThread : SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available 
+FROM doctor_availability 
+WHERE doctor_availability.doctor_id = ?
+2026-01-05 12:23:41,056 INFO sqlalchemy.engine.Engine MainThread : [generated in 0.00045s] ('DR10a6dd4d844d',)
+2026-01-05 12:23:41,058 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:41,058 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method cursor of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:41,058 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFAC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ?', ('DR10a6dd4d844d',))
+2026-01-05 12:23:41,060 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method execute of sqlite3.Cursor object at 0x0000020BA3CFFAC0>, 'SELECT doctor_availability.availability_id, doctor_availability.doctor_id, doctor_availability.date, doctor_availability.morning_available, doctor_availability.evening_available \nFROM doctor_availability \nWHERE doctor_availability.doctor_id = ?', ('DR10a6dd4d844d',)) completed
+2026-01-05 12:23:41,064 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFAC0>)
+2026-01-05 12:23:41,065 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x0000020BA3CFFAC0>) completed
+2026-01-05 12:23:41,069 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFAC0>)
+2026-01-05 12:23:41,069 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method close of sqlite3.Cursor object at 0x0000020BA3CFFAC0>) completed
+2026-01-05 12:23:41,071 INFO sqlalchemy.engine.Engine MainThread : ROLLBACK
+2026-01-05 12:23:41,071 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:41,071 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:41,071 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : executing functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>)
+2026-01-05 12:23:41,071 DEBUG aiosqlite Thread-1 (_connection_worker_thread) : operation functools.partial(<built-in method rollback of sqlite3.Connection object at 0x0000020BA3CF9120>) completed
+2026-01-05 12:23:50,398 INFO apscheduler.scheduler MainThread : Scheduler has been shut down

@@ -73,7 +73,10 @@ class DoctorService:
                 detail=str(e)
             )
         
-        return {"message": "Doctor created", "doctor_id": new_doctor.doctor_id}
+        return {
+            "message": "Doctor created", 
+            "doctor_id": new_doctor.doctor_id
+        }
     
     
     async def update_doctor_(self, doctor_id: str, payload: DoctorUpdate):
