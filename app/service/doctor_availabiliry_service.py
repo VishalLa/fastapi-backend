@@ -20,7 +20,7 @@ from ..database.api_models.doctor_availability_model import (
     DoctorAvailabilityResponse
 )
 
-from .helper import generate_new_doctor_availability
+# from .helper import generate_new_doctor_availability
 
 from datetime import date, timedelta, datetime
 
@@ -67,14 +67,14 @@ class DoctorAvailabilityService:
         avalibility_list: list[DoctorAvailability] = []
         
         for i in range(7):
-            availability_id  = generate_new_doctor_availability(doctor_id=doctor_id, iter=i)
+            # availability_id  = generate_new_doctor_availability(doctor_id=doctor_id, iter=i)
             current_date = start_of_week + timedelta(days=i)
 
             query = (
                 select(DoctorAvailability).
                 where(
                     and_(
-                        DoctorAvailability.availability_id  == availability_id ,
+                        DoctorAvailability.doctor_id == doctor_id,
                         DoctorAvailability.date == current_date
                     )
                 )
@@ -90,7 +90,6 @@ class DoctorAvailabilityService:
                 )
             
             new_avalibility = DoctorAvailability(
-                availability_id  = availability_id , 
                 doctor_id = doctor_id,
                 date = current_date,
                 morning_available = False,
