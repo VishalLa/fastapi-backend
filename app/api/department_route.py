@@ -9,7 +9,7 @@ from ..database.api_models.department_model import (
     DepartmentResponse,
     DepatemtntUpdate
 )
-from ..service.department_service import DepartmentService
+from ..service import DepartmentService
 
 admin_department_api_route = APIRouter(prefix="/admin/department", tags=["Department"])
 

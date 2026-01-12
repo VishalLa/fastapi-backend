@@ -1,23 +1,35 @@
-from typing import Optional
+from typing import Optional, List
 from datetime import date as Date
 from pydantic import Field
 from .api_base_model import TunedModel
 
 
-class TreatmentBase(TunedModel):
+class TreatmentCreate(TunedModel):
+    appointment_id: str 
+    doctor_id: str 
+    patient_id: str
+    treatment_id: str
     test_done: Optional[str] = None
     diagonsis: Optional[str] = None
     prescription: Optional[str] = None
     follow_up_date: Optional[str] = None
 
 
-class TreatmentCreate(TreatmentBase):
-    treatment_id: str
-    appointment_id: str
+class PatientHistoryResponse(TunedModel):
+    visit_type: str
+    test_done: Optional[str]
+    diagnosis: Optional[str]
+    prescription: Optional[str]
 
 
-class TreatmentResponse(TreatmentBase):
-    treatment_id: str
+class PatientDoctorData(TunedModel):
+    patient_name: str
+    doctor_name: str
+
+
+class PatientHistoryData(TunedModel):
+    patient_doctor_data: PatientDoctorData
+    patient_history: List[PatientHistoryResponse]
 
 
 # Appointment Schema

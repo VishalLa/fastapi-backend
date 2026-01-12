@@ -7,3 +7,5 @@ __pycache__/
 db/
 test.py
 *.idea
+*.log
+debug.log

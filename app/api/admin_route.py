@@ -3,8 +3,8 @@ from fastapi import (
     Depends,
     status
 )
-
-from ..service.admin_service import AdminService 
+ 
+from ..service import AdminService
 from ..database.api_models.admin_model import DashboardSearchResponse
 
 

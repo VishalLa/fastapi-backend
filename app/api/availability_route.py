@@ -4,7 +4,7 @@ from fastapi import (
     status
 )
 
-from ..service.doctor_availabiliry_service import DoctorAvailabilityService 
+from ..service import DoctorAvailabilityService 
 from ..database.api_models.doctor_availability_model import (
     DoctorAvailabilityUpdate,
     DoctorAvailabilityResponse

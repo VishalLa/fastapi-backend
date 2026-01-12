@@ -81,8 +81,8 @@ class DoctorService:
     
     async def update_doctor_(self, doctor_id: str, payload: DoctorUpdate):
         query = (
-            select(Doctor).
-            where(Doctor.doctor_id == doctor_id)
+            select(Doctor)
+            .where(Doctor.doctor_id == doctor_id)
         )
         
         result = await self.db.execute(query)

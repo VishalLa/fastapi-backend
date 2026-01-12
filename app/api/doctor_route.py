@@ -8,7 +8,7 @@ from ..database.api_models.doctor_model import (
     DoctorSummary,
     DoctorUpdate,
 )
-from ..service.doctor_availabiliry_service import DoctorAvailabilityService
+from ..service import DoctorAvailabilityService
 from ..service.doctor_service import DoctorService
 
 admin_doctor_api_route = APIRouter(prefix="/admin/doctor", tags=["Doctor"])

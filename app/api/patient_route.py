@@ -8,7 +8,7 @@ from ..database.api_models.patient_model import (
     PateintUpdate,
     PatientSummary
 )
-from ..service.patient_service import PatientService
+from ..service import PatientService
 
 patient_api_route = APIRouter(prefix="/patient", tags=["Patient"])
 

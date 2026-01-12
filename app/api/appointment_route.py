@@ -9,7 +9,7 @@ from ..database.api_models.appointment_treatment_model import (
     AppointmentResponse
 )
 
-from ..service.appointment_service import AppointmentService
+from ..service import AppointmentService
 
 
 appointment_api_route = APIRouter(prefix="/appointment", tags=["Appointment"])
